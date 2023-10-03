@@ -1,8 +1,6 @@
 package com.example.group11practice.shiro;
 
 
-import com.example.group11practice.model.PermissionModel;
-import com.example.group11practice.model.RoleModel;
 import com.example.group11practice.model.UserModel;
 import com.example.group11practice.service.UserService;
 import com.example.group11practice.utils.CheckUtil;
@@ -18,8 +16,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MyRealm extends AuthorizingRealm {
@@ -44,12 +42,11 @@ public class MyRealm extends AuthorizingRealm {
         String loginName = JWTUtil.getLoginName(principals.toString());
         UserModel userModel = userService.queryUserByLoginName(loginName);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        List<String> roleNameList = userService.queryRoleByUserId(userModel.getId()).stream().map(
-                RoleModel::getRoleName).collect(Collectors.toList());
-        List<String> permissionNameList = userService.queryPermissionByUserId(userModel.getId()).stream().map(
-                PermissionModel::getPerName).collect(Collectors.toList());
+        List<String> roleNameList = Arrays.asList(userModel.getRole());
+//        List<String> permissionNameList = userService.queryPermissionByUserId(userModel.getId()).stream().map(
+//                PermissionModel::getPerName).collect(Collectors.toList());
         simpleAuthorizationInfo.addRoles(roleNameList);
-        simpleAuthorizationInfo.addStringPermissions(permissionNameList);
+//        simpleAuthorizationInfo.addStringPermissions(permissionNameList);
         return simpleAuthorizationInfo;
     }
 

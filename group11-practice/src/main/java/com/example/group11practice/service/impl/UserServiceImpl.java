@@ -1,10 +1,7 @@
 package com.example.group11practice.service.impl;
 
-import com.example.group11practice.entity.RolePermission;
+import com.example.group11practice.entity.Follow;
 import com.example.group11practice.entity.User;
-import com.example.group11practice.entity.UserRole;
-import com.example.group11practice.model.PermissionModel;
-import com.example.group11practice.model.RoleModel;
 import com.example.group11practice.model.UserModel;
 import com.example.group11practice.repository.*;
 import com.example.group11practice.service.UserService;
@@ -27,16 +24,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserModel, User, Long> impl
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRoleRepository userRoleRepository;
-
-    @Autowired
-    private RolePermissionRepository rolePermissionRepository;
-
-    @Autowired
-    private PermissionRepository permissionRepository;
+    private FollowRepository followRepository;
 
     @Override
     protected Class<UserModel> getModelType() {
@@ -48,10 +36,7 @@ public class UserServiceImpl extends BaseServiceImpl<UserModel, User, Long> impl
         return User.class;
     }
 
-    private List<Long> queryRoleIdsByUserId(Long userId) {
-        return userRoleRepository.findByUserIdAndDeleted(userId, false).stream().map(UserRole::getRoleId)
-                .collect(Collectors.toList());
-    }
+
 
     @Override
     public UserModel queryUserByLoginName(String loginName) {
@@ -69,23 +54,25 @@ public class UserServiceImpl extends BaseServiceImpl<UserModel, User, Long> impl
     }
 
     @Override
-    public List<RoleModel> queryRoleByUserId(Long userId) {
-        List<Long> roleIdList = this.queryRoleIdsByUserId(userId);
-        if (CheckUtil.isEmpty(roleIdList)) {
-            return new ArrayList<>();
-        }
-        return OrikaUtil.mapAsList(roleRepository.findAllById(roleIdList), RoleModel.class);
+    public List<Long> queryFollowingUserIdListByBeFollowedUserId(Long beFollowedUserId) {
+        return followRepository.findByBeFollowedUserIdAndDeleted(beFollowedUserId, false).stream().map(
+                Follow::getFollowingUserId).collect(Collectors.toList());
     }
 
     @Override
-    public List<PermissionModel> queryPermissionByUserId(Long userId) {
-        List<Long> roleIdList = this.queryRoleIdsByUserId(userId);
-        if (CheckUtil.isEmpty(roleIdList)) {
+    public List<Long> queryBeFollowedUserIdListByFollowingUserId(Long FollowingUserId) {
+        return followRepository.findByFollowingUserIdAndDeleted(FollowingUserId, false).stream().map(
+                Follow::getFollowingUserId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserModel> queryFollowingUserModelByBeFollowedUserId(Long beFollowedUserId) {
+        List<Long> followingUserIdList = this.queryFollowingUserIdListByBeFollowedUserId(beFollowedUserId);
+        if(CheckUtil.isEmpty(followingUserIdList)) {
             return new ArrayList<>();
         }
-        List<Long> permissionIdList = rolePermissionRepository.findByRoleIdInAndDeleted(roleIdList, false).stream().map(
-                RolePermission::getPermissionId).collect(Collectors.toList());
-        return OrikaUtil.mapAsList(permissionRepository.findAllById(permissionIdList), PermissionModel.class);
+        return OrikaUtil.mapAsList(userRepository.findAllById(followingUserIdList), UserModel.class);
     }
+
 
 }

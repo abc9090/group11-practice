@@ -13,8 +13,8 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@Table(name = "USER_ROLE")
-public class UserRole implements BaseEntity<Long>, Serializable {
+@Table(name = "FOLLOW")
+public class Follow implements BaseEntity<Long>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,9 +22,9 @@ public class UserRole implements BaseEntity<Long>, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private Long beFollowedUserId;
 
-    private Long roleId;
+    private Long FollowingUserId;
 
     private Boolean deleted;
 
@@ -39,3 +39,4 @@ public class UserRole implements BaseEntity<Long>, Serializable {
     private String remark;
 
 }
+

@@ -5,17 +5,15 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class PermissionModel {
+public class FollowModel {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String perName;
+    private Long beFollowedUserId;
 
-    private String perDesc;
-
-    private String perUrl;
+    private Long FollowingUserId;
 
     private Boolean deleted;
 

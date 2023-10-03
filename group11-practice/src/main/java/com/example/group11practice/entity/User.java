@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -33,6 +34,10 @@ public class User implements BaseEntity<Long>, Serializable {
     private String email;
 
     private String phone;
+
+    private String role;
+
+    private BigDecimal balance;
 
     private Boolean deleted;
 

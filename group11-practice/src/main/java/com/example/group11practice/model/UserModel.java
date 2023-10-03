@@ -3,6 +3,7 @@ package com.example.group11practice.model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -23,6 +24,10 @@ public class UserModel implements Serializable {
     private String email;
 
     private String phone;
+
+    private String role;
+
+    private BigDecimal balance;
 
     private Boolean deleted;
 
